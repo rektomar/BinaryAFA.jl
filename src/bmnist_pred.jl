@@ -9,8 +9,8 @@ function init_data(data::AbstractMatrix)
 	SB = SBitSet{N, UInt64}
     z = zeros(UInt64, N, size(data, 2))
     for i in axes(data, 2)
-        v = SB(findall(data[:,i] .== 1))
-        z[:,i] .= v.pieces
+        sb = SB(findall(data[:,i] .== 1))
+        z[:,i] .= sb.pieces
     end
     z    
 end
@@ -54,7 +54,7 @@ function class_probs(h, ny)
     jnt / sum(jnt)          # p(y| x_o)
 end
 
-function predict(model, x, m)
+function predict(model::EmpiricalModel, x::SBitSet{N,UInt64}, m::SBitSet{N,UInt64}) where {N}
 	h = count_match(model, x, m)
 	probs = class_probs(h, model.ny)
 

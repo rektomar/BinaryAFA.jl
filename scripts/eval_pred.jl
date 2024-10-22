@@ -15,7 +15,7 @@ function load_data()
 end
 
 n_classes = 10
-P = 0.01
+P = 0.01  # kernel width (probability of error)
 x_trn, x_tst, y_trn, y_tst = load_data()
 N = ceil(Int64, size(x_trn, 1) / 64)
 model = EmpiricalModel(x_trn, y_trn, n_classes, P);
@@ -30,6 +30,7 @@ function prediction_loop(model::EmpiricalModel, x::SBitSet{N, UInt64}, n_steps) 
     println("Step 0 probs $p̂",) 
 
     for i in 1:n_steps
+        # TODO for you: add custom pixel position selection
         x_pos, y_pos = rand(1:28), rand(1:28)
         feature_id = pixel_position(x_pos, y_pos)
         println(feature_id)
@@ -41,5 +42,6 @@ function prediction_loop(model::EmpiricalModel, x::SBitSet{N, UInt64}, n_steps) 
 end
 
 n_steps = 10
-x = SBitSet{N, UInt64}(findall(x_tst[:, 1] .== 1))   # take the first test set observation
+observation_id = 1 
+x = SBitSet{N, UInt64}(findall(x_tst[:, 1] .== observation_id))   # take the first test set observation
 prediction_loop(model, x, n_steps)
