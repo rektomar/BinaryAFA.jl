@@ -41,7 +41,29 @@ function prediction_loop(model::EmpiricalModel, x::SBitSet{N, UInt64}, n_steps) 
     end
 end
 
+function afa_loop(model::EmpiricalModel, x::SBitSet{N, UInt64}, n_steps) where {N}
+    m = SBitSet{N, UInt64}()    # initialize empty mask
+
+    entropy_arr = []
+
+    p̂, ŷ = predict(model, x, m)
+    push!(entropy_arr, entropy(p̂))
+    println("Step 0 probs $p̂",) 
+
+    for i in 1:n_steps
+        feature_id = afa_step(model, x, m)
+
+        m = push(m, feature_id)         # add feature index to mask
+        p̂, ŷ = predict(model, x, m)
+        push!(entropy_arr, entropy(p̂))
+        println("Step $i probs $p̂",) 
+    end
+    entropy_arr
+end
+
 n_steps = 10
-observation_id = 1 
-x = SBitSet{N, UInt64}(findall(x_tst[:, 1] .== observation_id))   # take the first test set observation
+observation_id = 2 
+x = SBitSet{N, UInt64}(findall(x_tst[:, observation_id] .== 1))   # take the first test set observation
 prediction_loop(model, x, n_steps)
+
+entropy_arr = afa_loop(model, x, n_steps)
