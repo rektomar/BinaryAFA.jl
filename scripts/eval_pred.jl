@@ -20,6 +20,8 @@ x_trn, x_tst, y_trn, y_tst = load_data()
 N = ceil(Int64, size(x_trn, 1) / 64)
 model = EmpiricalModel(x_trn, y_trn, n_classes, P);
 
+reshape_img(img_flat, shape=(28, 28)) = reshape(img_flat, shape)'
+pixel_position(x, y; width=28, height=28) = width*(y-1) + x
 
 function prediction_loop(model::EmpiricalModel, x::SBitSet{N, UInt64}, n_steps) where {N}
     m = SBitSet{N, UInt64}()    # initialize empty mask
@@ -28,8 +30,10 @@ function prediction_loop(model::EmpiricalModel, x::SBitSet{N, UInt64}, n_steps) 
     println("Step 0 probs $p̂",) 
 
     for i in 1:n_steps
-        id = rand(1:784)
-        m = push(m, id)         # add feature index to mask
+        x_pos, y_pos = rand(1:28), rand(1:28)
+        feature_id = pixel_position(x_pos, y_pos)
+        println(feature_id)
+        m = push(m, feature_id)         # add feature index to mask
 
         p̂, ŷ = predict(model, x, m)
         println("Step $i probs $p̂",) 
