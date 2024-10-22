@@ -1,0 +1,8 @@
+name = "bmnist_pred"
+uuid = "6b555c8a-e9cd-4a8d-ac6d-1bae5f52354f"
+authors = ["Martin Rektoris"]
+version = "0.1.0"
+
+[deps]
+NPZ = "15e1cf62-19b3-5cfa-8e77-841668bca605"
+StaticBitSets = "72d6c30d-a10b-4e7e-bc09-3079d9530bdf"
