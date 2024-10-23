@@ -80,17 +80,17 @@ function afa_objective(counts_0, counts_1, ny)
 	py0 = class_probs(counts_0, ny) # p(y|X_i=0, X_o=x_o)
 	py1 = class_probs(counts_1, ny) # p(y|X_i=1, X_o=x_o)
 
-	h_0 = entropy(py0)  # H(y|X_i=0, X_o=x_o)
-	h_1 = entropy(py1)  # H(y|X_i=1, X_o=x_o)
+	H_0 = entropy(py0)  # H(y|X_i=0, X_o=x_o)
+	H_1 = entropy(py1)  # H(y|X_i=1, X_o=x_o)
 
-	jnt_0 = sum(h_0 ./ sum(ny)) # p(X_i=0, X_o=x_o)
-	jnt_1 = sum(h_1 ./ sum(ny)) # p(X_i=1, X_o=x_o)
+	jnt_0 = sum(counts_0 ./ sum(ny)) # p(X_i=0, X_o=x_o)
+	jnt_1 = sum(counts_1 ./ sum(ny)) # p(X_i=1, X_o=x_o)
 	marg = jnt_0 + jnt_1 # p(X_o=x_o)
 	# the division by the marginal is not even needed for our purpose
 	cond_0 = jnt_0 / marg # p(X_i=0 | X_o=x_o)
 	cond_1 = jnt_1 / marg # p(X_i=1 | X_o=x_o)
 
-	cond_0*h_0 + cond_1*h_1
+	cond_0*H_0 + cond_1*H_1
 end
 
 function afa_step(model::EmpiricalModel, x::SBitSet{N, UInt64}, m::SBitSet{N, UInt64}) where {N}
